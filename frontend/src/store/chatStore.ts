@@ -23,6 +23,11 @@ function persistSessionId(sessionId: string): void {
 interface ChatStore {
   messages: Message[];
   isAgentTyping: boolean;
+  /** true с момента отправки сообщения и до полного завершения стрима ответа
+   * (включая пословное появление текста) — управляет статусом "печатает…"
+   * в шапке чата, в отличие от isAgentTyping, который гаснет уже на первом
+   * токене (когда точки-индикатор сменяется растущим текстом). */
+  isResponding: boolean;
   isConnected: boolean;
   sessionId: string;
   hasStoredSession: boolean;
@@ -32,6 +37,7 @@ interface ChatStore {
   updateMessage: (id: string, patch: Partial<Message>) => void;
   appendToMessage: (id: string, textChunk: string) => void;
   setAgentTyping: (isTyping: boolean) => void;
+  setResponding: (isResponding: boolean) => void;
   setConnected: (isConnected: boolean) => void;
   resetChat: () => void;
 }
@@ -39,6 +45,7 @@ interface ChatStore {
 export const useChatStore = create<ChatStore>((set) => ({
   messages: [],
   isAgentTyping: false,
+  isResponding: false,
   isConnected: true,
   sessionId: readStoredSessionId() ?? '',
   hasStoredSession: readStoredSessionId() !== null,
@@ -64,11 +71,12 @@ export const useChatStore = create<ChatStore>((set) => ({
     })),
 
   setAgentTyping: (isAgentTyping) => set({ isAgentTyping }),
+  setResponding: (isResponding) => set({ isResponding }),
   setConnected: (isConnected) => set({ isConnected }),
 
   resetChat: () => {
     const newSessionId = uuid();
     persistSessionId(newSessionId);
-    set({ messages: [], isAgentTyping: false, sessionId: newSessionId });
+    set({ messages: [], isAgentTyping: false, isResponding: false, sessionId: newSessionId });
   },
 }));

@@ -54,11 +54,16 @@ export default {
           '0%': { opacity: '0', transform: 'scale(0.9)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
         },
+        'status-glow': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.45' },
+        },
       },
       animation: {
         'message-in': 'message-in 350ms cubic-bezier(0.16, 1, 0.3, 1)',
         'dot-pulse': 'dot-pulse 1.2s ease-in-out infinite',
         'pop-in': 'pop-in 250ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+        'status-glow': 'status-glow 2.6s ease-in-out infinite',
       },
       transitionTimingFunction: {
         spring: 'cubic-bezier(0.16, 1, 0.3, 1)',

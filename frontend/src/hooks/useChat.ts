@@ -13,6 +13,7 @@ export function useChat() {
   const {
     messages,
     isAgentTyping,
+    isResponding,
     isConnected,
     sessionId,
     setSessionId,
@@ -20,6 +21,7 @@ export function useChat() {
     updateMessage,
     appendToMessage,
     setAgentTyping,
+    setResponding,
     setConnected,
     resetChat,
   } = useChatStore();
@@ -31,6 +33,7 @@ export function useChat() {
 
   const handleTimeout = useCallback(() => {
     setAgentTyping(false);
+    setResponding(false);
     setIsSending(false);
     abortControllerRef.current?.abort();
 
@@ -39,7 +42,7 @@ export function useChat() {
       updateMessage(agentId, { content: TIMEOUT_ERROR_TEXT, status: 'error' });
       activeAgentMessageId.current = null;
     }
-  }, [setAgentTyping, updateMessage]);
+  }, [setAgentTyping, setResponding, updateMessage]);
 
   const typingTimer = useTypingStatus({ onTimeout: handleTimeout });
 
@@ -74,6 +77,7 @@ export function useChat() {
 
       setIsSending(true);
       setAgentTyping(true);
+      setResponding(true);
       typingTimer.start();
 
       try {
@@ -104,6 +108,7 @@ export function useChat() {
             onDone: (_messageId, resolvedSessionId, suggestions) => {
               typingTimer.clear();
               setAgentTyping(false);
+              setResponding(false);
               setIsSending(false);
               if (activeAgentMessageId.current) {
                 updateMessage(activeAgentMessageId.current, { isStreaming: false, suggestions });
@@ -116,6 +121,7 @@ export function useChat() {
             onError: (message) => {
               typingTimer.clear();
               setAgentTyping(false);
+              setResponding(false);
               setIsSending(false);
               if (activeAgentMessageId.current) {
                 updateMessage(activeAgentMessageId.current, {
@@ -140,6 +146,7 @@ export function useChat() {
       } catch {
         typingTimer.clear();
         setAgentTyping(false);
+        setResponding(false);
         setIsSending(false);
         if (!controller.signal.aborted) {
           addMessage({
@@ -152,7 +159,17 @@ export function useChat() {
         }
       }
     },
-    [sessionId, locale, addMessage, appendToMessage, updateMessage, setAgentTyping, setSessionId, typingTimer]
+    [
+      sessionId,
+      locale,
+      addMessage,
+      appendToMessage,
+      updateMessage,
+      setAgentTyping,
+      setResponding,
+      setSessionId,
+      typingTimer,
+    ]
   );
 
   const sendMessage = useCallback(
@@ -197,6 +214,7 @@ export function useChat() {
   return {
     messages,
     isAgentTyping,
+    isResponding,
     isConnected,
     isSending,
     sendMessage,

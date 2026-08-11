@@ -14,7 +14,7 @@ export function ChatHeader({ status, onNewChat, onOpenFaq }: ChatHeaderProps) {
   const { t } = useTranslations();
 
   const statusConfig: Record<AgentStatus, { label: string; dotClass: string }> = {
-    online: { label: t.status.online, dotClass: 'bg-[#34C759]' },
+    online: { label: t.status.online, dotClass: 'bg-[#34C759] animate-status-glow' },
     typing: { label: t.status.typing, dotClass: 'bg-[#34C759] animate-pulse' },
     offline: { label: t.status.offline, dotClass: 'bg-black/30 dark:bg-white/30' },
   };

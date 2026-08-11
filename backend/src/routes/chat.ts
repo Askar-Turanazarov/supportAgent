@@ -9,7 +9,7 @@ import { getFaqCategories } from '../services/scenarios.js';
 export const chatRouter = Router();
 
 const LLM_TIMEOUT_MS = 12_000;
-const TOKEN_CHUNK_DELAY_MS = 35;
+const TOKEN_CHUNK_DELAY_MS = 16;
 const MAX_MESSAGE_LENGTH = 2000;
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {

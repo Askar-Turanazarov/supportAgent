@@ -11,6 +11,7 @@ export function ChatWindow() {
   const {
     messages,
     isAgentTyping,
+    isResponding,
     isConnected,
     isSending,
     sendMessage,
@@ -21,7 +22,7 @@ export function ChatWindow() {
   const { t } = useTranslations();
   const [isFaqOpen, setFaqOpen] = useState(false);
 
-  const status = !isConnected ? 'offline' : isAgentTyping ? 'typing' : 'online';
+  const status = !isConnected ? 'offline' : isResponding ? 'typing' : 'online';
 
   const { containerRef, handleScroll, hasNewMessages, scrollToBottom } = useAutoScroll([
     messages,
