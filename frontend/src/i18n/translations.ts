@@ -6,7 +6,15 @@ export interface Translations {
   newChat: string;
   empty: { title: string; subtitle: string; quickReplies: string[] };
   input: { placeholder: string; ariaLabel: string; sendAriaLabel: string; sending: string };
-  message: { retry: string; newMessages: string; typingAria: string; rate: string; rateThanks: string };
+  message: {
+    retry: string;
+    newMessages: string;
+    typingAria: string;
+    rate: string;
+    rateThanks: string;
+    error: string;
+    timeoutError: string;
+  };
   offlineBanner: string;
   theme: { light: string; dark: string; toggleAriaToLight: string; toggleAriaToDark: string };
   language: { toggleAria: string };
@@ -39,6 +47,8 @@ export const translations: Record<Locale, Translations> = {
       typingAria: 'Агент печатает сообщение',
       rate: 'Оцените ответ',
       rateThanks: 'Спасибо за оценку!',
+      error: 'Не удалось получить ответ, попробуйте снова',
+      timeoutError: 'Превышено время ожидания ответа. Попробуйте снова.',
     },
     offlineBanner: 'Нет подключения к интернету',
     theme: {
@@ -82,6 +92,8 @@ export const translations: Record<Locale, Translations> = {
       typingAria: 'Agent xabar yozmoqda',
       rate: 'Javobni baholang',
       rateThanks: 'Baholaganingiz uchun rahmat!',
+      error: 'Javobni olib bo‘lmadi, qaytadan urinib ko‘ring',
+      timeoutError: 'Javob kutish vaqti tugadi. Qaytadan urinib ko‘ring.',
     },
     offlineBanner: 'Internetga ulanish yo‘q',
     theme: {

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { randomUUID } from 'node:crypto';
-import { DEFAULT_LOCALE, isLocale, type ChatMessageRequestBody } from '../types.js';
+import { DEFAULT_LOCALE, isLocale, type ChatMessageRequestBody, type Locale } from '../types.js';
 import { appendHistory, createSession, getOrCreateSession } from '../services/sessionStore.js';
 import { getLlmResponse } from '../services/llmService.js';
 import { rateLimit } from '../middleware/rateLimit.js';
@@ -9,8 +9,21 @@ import { getFaqCategories } from '../services/scenarios.js';
 export const chatRouter = Router();
 
 const LLM_TIMEOUT_MS = 12_000;
-const TOKEN_CHUNK_DELAY_MS = 16;
+const TOKEN_CHUNK_DELAY_MS = 25;
 const MAX_MESSAGE_LENGTH = 2000;
+
+const ERROR_MESSAGES: Record<Locale, { invalid: string; timeout: string; generic: string }> = {
+  ru: {
+    invalid: 'Некорректное сообщение',
+    timeout: 'Превышено время ожидания ответа. Попробуйте снова.',
+    generic: 'Не удалось получить ответ, попробуйте снова',
+  },
+  uz: {
+    invalid: 'Xabar noto‘g‘ri',
+    timeout: 'Javob kutish vaqti tugadi. Qaytadan urinib ko‘ring.',
+    generic: 'Javobni olib bo‘lmadi, qaytadan urinib ko‘ring',
+  },
+};
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -59,7 +72,7 @@ chatRouter.post('/message', rateLimit, async (req, res) => {
 
   const trimmed = (message ?? '').trim();
   if (!trimmed || trimmed.length > MAX_MESSAGE_LENGTH) {
-    res.status(400).json({ message: 'Некорректное сообщение' });
+    res.status(400).json({ message: ERROR_MESSAGES[locale].invalid });
     return;
   }
 
@@ -105,9 +118,7 @@ chatRouter.post('/message', rateLimit, async (req, res) => {
     if (!clientClosed) {
       const timedOut = err instanceof Error && err.message === 'LLM_TIMEOUT';
       sseSend(res, 'error', {
-        message: timedOut
-          ? 'Превышено время ожидания ответа. Попробуйте снова.'
-          : 'Не удалось получить ответ, попробуйте снова',
+        message: timedOut ? ERROR_MESSAGES[locale].timeout : ERROR_MESSAGES[locale].generic,
       });
     }
   } finally {

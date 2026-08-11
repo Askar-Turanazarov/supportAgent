@@ -1,13 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { useChatStore } from '../store/chatStore';
-import { useSettingsStore } from '../store/settingsStore';
 import { createSession, streamChatMessage } from '../services/chatApi';
 import { useTypingStatus } from './useTypingStatus';
+import { useTranslations } from './useTranslations';
 import { limits } from '../styles/theme';
 import type { Message } from '../types/chat.types';
-
-const TIMEOUT_ERROR_TEXT = 'Не удалось получить ответ, попробуйте снова';
 
 export function useChat() {
   const {
@@ -25,7 +23,7 @@ export function useChat() {
     setConnected,
     resetChat,
   } = useChatStore();
-  const locale = useSettingsStore((s) => s.locale);
+  const { t, locale } = useTranslations();
 
   const [isSending, setIsSending] = useState(false);
   const activeAgentMessageId = useRef<string | null>(null);
@@ -39,10 +37,10 @@ export function useChat() {
 
     const agentId = activeAgentMessageId.current;
     if (agentId) {
-      updateMessage(agentId, { content: TIMEOUT_ERROR_TEXT, status: 'error' });
+      updateMessage(agentId, { content: t.message.timeoutError, status: 'error' });
       activeAgentMessageId.current = null;
     }
-  }, [setAgentTyping, setResponding, updateMessage]);
+  }, [setAgentTyping, setResponding, updateMessage, t]);
 
   const typingTimer = useTypingStatus({ onTimeout: handleTimeout });
 
@@ -152,7 +150,7 @@ export function useChat() {
           addMessage({
             id: agentMessageId,
             role: 'agent',
-            content: TIMEOUT_ERROR_TEXT,
+            content: t.message.error,
             timestamp: Date.now(),
             status: 'error',
           });
@@ -169,6 +167,7 @@ export function useChat() {
       setResponding,
       setSessionId,
       typingTimer,
+      t,
     ]
   );
 

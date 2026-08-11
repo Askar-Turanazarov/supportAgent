@@ -1,4 +1,5 @@
 import type { FaqCategory, Locale } from '../types/chat.types';
+import { getTranslations } from '../i18n/translations';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
 
@@ -59,7 +60,7 @@ export async function streamChatMessage(
   });
 
   if (!res.ok || !res.body) {
-    handlers.onError?.('Не удалось получить ответ, попробуйте снова');
+    handlers.onError?.(getTranslations(locale).message.error);
     return;
   }
 

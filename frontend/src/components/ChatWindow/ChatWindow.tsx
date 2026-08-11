@@ -24,10 +24,10 @@ export function ChatWindow() {
 
   const status = !isConnected ? 'offline' : isResponding ? 'typing' : 'online';
 
-  const { containerRef, handleScroll, hasNewMessages, scrollToBottom } = useAutoScroll([
-    messages,
-    isAgentTyping,
-  ]);
+  const { containerRef, handleScroll, hasNewMessages, scrollToBottom } = useAutoScroll(
+    [messages, isAgentTyping],
+    isResponding
+  );
 
   const handleFaqSelect = (question: string) => {
     sendMessage(question);
