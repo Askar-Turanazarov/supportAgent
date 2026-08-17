@@ -1,5 +1,6 @@
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageToggle } from './LanguageToggle';
+import { AgentAvatar } from './AgentAvatar';
 import { useTranslations } from '../../hooks/useTranslations';
 
 type AgentStatus = 'online' | 'typing' | 'offline';
@@ -23,9 +24,7 @@ export function ChatHeader({ status, onNewChat, onOpenFaq }: ChatHeaderProps) {
   return (
     <header className="flex items-start justify-between gap-2 border-b border-black/10 bg-surface/60 px-4 py-3 backdrop-blur-2xl backdrop-saturate-150 dark:border-white/10 dark:bg-surface-dark/60">
       <div className="flex min-w-0 items-center gap-3 pt-0.5">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary to-[#5AC8FA] text-sm font-semibold text-white shadow-sm">
-          AI
-        </div>
+        <AgentAvatar />
         <div className="min-w-0">
           <p className="truncate text-[14px] font-semibold tracking-tight text-black dark:text-white">
             {t.headerTitle}

@@ -3,5 +3,6 @@ npm-cache/
 dist/
 .env
 *.local
+prompt.local.txt
 *.log
 .claude/

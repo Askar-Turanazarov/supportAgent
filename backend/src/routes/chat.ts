@@ -8,7 +8,7 @@ import { getFaqCategories } from '../services/scenarios.js';
 
 export const chatRouter = Router();
 
-const LLM_TIMEOUT_MS = 12_000;
+const LLM_TIMEOUT_MS = 15_000;
 const TOKEN_CHUNK_DELAY_MS = 25;
 const MAX_MESSAGE_LENGTH = 2000;
 

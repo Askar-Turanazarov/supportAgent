@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { ChatHistoryEntry, Locale } from '../types.js';
+import { buildSystemPrompt } from './systemPrompt.js';
 
 let client: Anthropic | null = null;
 
@@ -8,18 +9,6 @@ function getClient(): Anthropic {
     client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
   }
   return client;
-}
-
-const LOCALE_NAME: Record<Locale, string> = {
-  ru: 'русском',
-  uz: 'узбекском (латиница)',
-};
-
-function buildSystemPrompt(locale: Locale): string {
-  return (
-    `Ты — вежливый и лаконичный ИИ-агент поддержки. Отвечай на ${LOCALE_NAME[locale]} языке, ` +
-    'по существу, используя markdown только когда это уместно (списки, код).'
-  );
 }
 
 export async function getAnthropicResponse(
