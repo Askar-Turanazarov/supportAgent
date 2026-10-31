@@ -17,6 +17,7 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/chat', chatRouter);
 
-app.listen(PORT, () => {
+if (!process.env.VERCEL) app.listen(PORT, () => {
   console.log(`[support-agent-backend] listening on http://localhost:${PORT} (LLM mode: ${getLlmMode()})`);
 });
+export default app;
